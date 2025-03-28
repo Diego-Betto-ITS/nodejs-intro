@@ -1,4 +1,5 @@
 const express = require('express');
+const qrcode = require('qrcode');
 
 const server = express();
 const port = 3000;
@@ -14,7 +15,6 @@ server.get('/timeline', (_req, res) => {
 
   res.send(timelineContent)
 })
-
 
 server.get('/', (_req, res) => {
   res.send('Hello world');
