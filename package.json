@@ -10,6 +10,7 @@
   "author": "Diego Betto <diego@papion.it>",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "qrcode": "^1.5.4"
   }
 }
