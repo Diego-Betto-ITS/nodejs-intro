@@ -3,6 +3,19 @@ const express = require('express');
 const server = express();
 const port = 3000;
 
+// le chiamate a '/data/timeline.json' rispondono con il
+// contenuto del file 'data/timeline.json'
+server.use('/data', express.static('data'));
+
+// le chiamate a '/timeline' rispondono con il contenuto
+// del file 'data/timeline.json'
+server.get('/timeline', (_req, res) => {
+  const timelineContent = require('../data/timeline.json');
+
+  res.send(timelineContent)
+})
+
+
 server.get('/', (_req, res) => {
   res.send('Hello world');
 });

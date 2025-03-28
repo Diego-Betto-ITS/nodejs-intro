@@ -3,3 +3,11 @@ GET http://localhost:3000
 ###
 
 GET http://localhost:3000/json
+
+###
+
+GET http://localhost:3000/timeline
+
+###
+
+GET http://localhost:3000/data/timeline.json

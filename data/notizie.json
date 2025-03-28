@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "titolo": "notizia di prova",
+        "testo": "testo della notizia",
+        "data": "2025-03-28"
+    },
+    {
+        "id": 2,
+        "titolo": "notizia di prova 2",
+        "testo": "testo della notizia 2",
+        "data": "2025-03-28"
+    }
+]
