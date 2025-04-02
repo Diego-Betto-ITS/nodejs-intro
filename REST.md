@@ -37,7 +37,7 @@ Se ci sono elementi
 ]
 ```
 
-## GET /timeline/:id
+## GET /timeline/4
 
 **Risposta**, esempio per `/timeline/2`
 
@@ -73,7 +73,6 @@ Senza un body oppure `null` oppure
 }
 
 ```
-
 
 ## POST /timeline
 

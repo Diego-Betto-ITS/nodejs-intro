@@ -6,6 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node --watch src/index.js",
+    "server": "node --watch src/server.js",
     "qrcode": "node src/qrcode.js",
     "startqr": "npm run qrcode && npm run start"
   },
@@ -13,6 +14,7 @@
   "license": "ISC",
   "dependencies": {
     "express": "^4.21.2",
-    "qrcode": "^1.5.4"
+    "qrcode": "^1.5.4",
+    "wpdockerize": "^1.0.6"
   }
 }
