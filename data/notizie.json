@@ -1,14 +1,18 @@
 [
     {
         "id": 1,
-        "titolo": "notizia di prova",
-        "testo": "testo della notizia",
-        "data": "2025-03-28"
+        "year": 2025,
+        "company": "ACME",
+        "role": "Sviluppatore Junior",
+        "description": "Lorem ipsum dolor sit amet, in Lorem duis veniam laborum ipsum nulla proident",
+        "link": "https://google.com"
     },
     {
         "id": 2,
-        "titolo": "notizia di prova 2",
-        "testo": "testo della notizia 2",
-        "data": "2025-03-28"
+        "year": 2024,
+        "company": "SIGMA",
+        "role": "Sviluppatore Senior",
+        "description": "Lorem ipsum dolor sit amet, in Lorem duis veniam laborum ipsum nulla proident",
+        "link": "https://google.com"
     }
 ]

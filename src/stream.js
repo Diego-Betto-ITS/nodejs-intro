@@ -15,9 +15,9 @@ const reader = fs.createReadStream('data/notizie.json');
 const writerGz = fs.createWriteStream('data/notizie.json.gz');
 
 // ascolto degli eventi e mostro in console
-reader.on('open', () => console.log('Stream: open'))
-reader.on('close', () => console.log('Stream: close'))
-reader.on('data', (chunk) => console.log(chunk))
+// reader.on('open', () => console.log('Stream: open'))
+// reader.on('close', () => console.log('Stream: close'))
+// reader.on('data', (chunk) => console.log(chunk))
 
 // collego: il reader caricati i dati, li invia a gz che 
 // li comprime e poi invia in scrittura a writerGz
