@@ -11,6 +11,15 @@ GET http://localhost:3000/timeline/2000
 ###
 
 POST http://localhost:3000/timeline
+Content-Type: application/json
+
+{
+    "year": 2025,
+    "company": "ACME",
+    "role": "Sviluppatore Junior",
+    "description": "Lorem ipsum dolor sit amet, in Lorem duis veniam laborum ipsum nulla proident",
+    "link": "https://google.com"
+}
 
 ###
 
