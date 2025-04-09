@@ -23,8 +23,7 @@ DELETE FROM timeline WHERE rowid = 4
 ## Inserisco una riga con dei valori
 
 ```sql
-INSERT INTO timeline VALUES (2024, "ACME2", "admin", "blabla", "https://papi
-on.it")
+INSERT INTO timeline VALUES (2024, "ACME2", "admin", "blabla", "https://papion.it")
 ```
 
 ## Aggiorno alcuni campi di una riga con `rowid` = 75
