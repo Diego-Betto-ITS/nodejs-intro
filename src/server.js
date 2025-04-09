@@ -113,19 +113,86 @@ server.post('/timeline', (req, res) => {
 // esempio di query da eseguire
 // `UPDATE timeline SET year = 2025, company = "Bianchi" WHERE rowid = 75;`
 server.put('/timeline/:id', (req, res) => {
+    db.serialize(() => {
+        const stmt = db.prepare(
+            "UPDATE timeline SET year = $year, company = $company, role = $role, description = $description, link = $link WHERE rowid = $id",
+            {
+                $id: parseInt(req.params.id),
+                $year: req.body.year,
+                $company: req.body.company,
+                $role: req.body.role,
+                $description: req.body.description,
+                $link: req.body.link
+            }
+        );
 
+        stmt.run(function() {
+            if (this.changes === 0) {
+                console.log('Non ho trovato quel id')
+                return res.status(404).send()
+            }
+
+            db.get(
+                "SELECT rowid AS id, * FROM timeline WHERE rowid = $id",
+                {
+                    $id: parseInt(req.params.id)
+                },
+                function(err, row) {
+                    if (err) {
+                        console.error(err);
+                        return res.status(400).send('Aggiornamento riuscito, ma query di lettura fallita');
+                    }
+
+                    return res.send(row);
+                }
+            )
+        })
+    })
 });
 
 // rispondo con "ok PATCH con id..." alle chiamate con metodo "PATCH" che ricevo su "/timeline/:id"
+// possiamo usare la PUT, creiamo la PATCH solo per completezza
 server.patch('/timeline/:id', (req, res) => {
-    res.status(202).send({
-        "id": 100,
-        "year": 2025,
-        "company": "ACME",
-        "role": "Sviluppatore Junior",
-        "description": "Lorem ipsum dolor sit amet, in Lorem duis veniam laborum ipsum nulla proident",
-        "link": "https://google.com"
-    });
+    db.serialize(() => {
+        const campiDaAggiornare = [];
+        const variabiliDaUtilizzare = {
+            $id: parseInt(req.params.id)
+        }
+
+        const objectKeys = Object.keys(req.body);
+
+        objectKeys.forEach((k) => {
+            campiDaAggiornare.push(`${k} = $${k}`);
+            variabiliDaUtilizzare[`$${k}`] = req.body[k];
+        });
+
+        const stmt = db.prepare(
+            `UPDATE timeline SET ${campiDaAggiornare.join(', ')} WHERE rowid = $id`,
+            variabiliDaUtilizzare
+        );
+
+        stmt.run(function() {
+            if (this.changes === 0) {
+                console.log('Non ho trovato quel id')
+                return res.status(404).send()
+            }
+
+            db.get(
+                "SELECT rowid AS id, * FROM timeline WHERE rowid = $id",
+                {
+                    $id: parseInt(req.params.id)
+                },
+                function(err, row) {
+                    if (err) {
+                        console.error(err);
+                        return res.status(400).send('Aggiornamento riuscito, ma query di lettura fallita');
+                    }
+
+                    return res.send(row);
+                }
+            )
+        })
+    })
 });
 
 // rispondo con "ok DELETE con id..." alle chiamate con metodo "DELETE" che ricevo su "/timeline/:id"

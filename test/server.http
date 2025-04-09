@@ -23,11 +23,26 @@ Content-Type: application/json
 
 ###
 
-PUT http://localhost:3000/timeline/2
+PUT http://localhost:3000/timeline/7
+Content-Type: application/json
+
+{
+    "year": 2021,
+    "company": "ACME 2021",
+    "role": "Sviluppatore Junior",
+    "description": "Lorem ipsum dolor sit amet, in Lorem duis veniam laborum ipsum nulla proident",
+    "link": "https://google.com"
+}
 
 ###
 
-PATCH http://localhost:3000/timeline/2
+PATCH http://localhost:3000/timeline/7
+Content-Type: application/json
+
+{
+    "year": 1900,
+    "company": "ACME 1900"
+}
 
 ###
 
