@@ -54,7 +54,6 @@ server.get('/timeline/:id', (req, res) => {
 
 // rispondo con "ok POST" alle chiamate con metodo "POST" che ricevo su "/timeline"
 server.post('/timeline', (req, res) => {
-    let lastInsertedID;
     db.serialize(() => {
         // preparo uno statement, un istruzione di inserimento da eseguire
         const stmt = db.prepare(
@@ -74,38 +73,32 @@ server.post('/timeline', (req, res) => {
         // esempio `function(){}`
 
         stmt.run(function() {
-            console.log(this.lastID);
-            lastInsertedID = this.lastID;
+
+            // inserimento ok, leggo l'ultima riga inserita che dovrò mandare al client
+            db.get(
+                "SELECT rowid AS id, * FROM timeline WHERE rowid = $id", // query
+                {
+                    $id: this.lastID
+                }, // parametri per la query 
+                function(err, row) { // callback da eseguire quando ho terminato la query
+                    // se c'è un errore `err` è valorizzato, altrimenti no
+                    if (err) {
+                        // c'è un errore, termino l'esecuzione e mando un messaggio in console e al client
+                        console.error(err);
+                        return res.send(400).send('Inserimento completato, errore nella lettura dei dati')
+                    }
+        
+                    // err non è valorizzato, quindi invio i dati che ricevo su `row` 
+                    // al client
+                    return res.send(row);
+                }
+            );
+
         });
 
         // termino lo statement
-        stmt.finalize();
-
-        console.log('lastInsertedID', lastInsertedID)
-
-        // inserimento ok, leggo l'ultima riga inserita che dovrò mandare al client
-    
+        stmt.finalize();    
     });
-
-    // esercizio: valutare perché lastInsertedId sembra non essere disponibile
-    db.get(
-        "SELECT rowid AS id, * FROM timeline WHERE rowid = $id", // query
-        {
-            $id: lastInsertedID
-        }, // parametri per la query 
-        function(err, row) { // callback da eseguire quando ho terminato la query
-            // se c'è un errore `err` è valorizzato, altrimenti no
-            if (err) {
-                // c'è un errore, termino l'esecuzione e mando un messaggio in console e al client
-                console.error(err);
-                return res.send(400).send('Inserimento completato, errore nella lettura dei dati')
-            }
-
-            // err non è valorizzato, quindi invio i dati che ricevo su `row` 
-            // al client
-            return res.send(row);
-        }
-    );
 });
 
 // rispondo con "ok PUT con id..." alle chiamate con metodo "PUT" che ricevo su "/timeline/:id"
