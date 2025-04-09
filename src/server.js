@@ -1,11 +1,20 @@
 // carico il modulo express
 const express = require('express');
 
+// carico il modulo per sqlite
+const sqlite3 = require('sqlite3').verbose();
+const db = new sqlite3.Database('data/timeline.db');
+
 // creo una costante "port" dove imposto la porta che userò con "server.lister" per avviare il server
 const port = 3000;
 
 // creo un server, lo devo poi configurare e avviare
 const server = express();
+
+// creo la tabella nel database se già non esiste
+db.serialize(() => {
+    db.run('CREATE TABLE IF NOT EXISTS timeline (year INTEGER, company TEXT, role TEXT, description TEXT, link TEXT)');
+});
 
 // inizio la configurazione, poi dovrò avviarlo
 
@@ -42,22 +51,43 @@ server.get('/timeline/:id', (req, res) => {
 
 // rispondo con "ok POST" alle chiamate con metodo "POST" che ricevo su "/timeline"
 server.post('/timeline', (req, res) => {
-    res.send('ok POST');
+    res.status(201).send({
+        "id": 100,
+        "year": 2025,
+        "company": "ACME",
+        "role": "Sviluppatore Junior",
+        "description": "Lorem ipsum dolor sit amet, in Lorem duis veniam laborum ipsum nulla proident",
+        "link": "https://google.com"
+    });
 });
 
 // rispondo con "ok PUT con id..." alle chiamate con metodo "PUT" che ricevo su "/timeline/:id"
 server.put('/timeline/:id', (req, res) => {
-    res.send(`ok PUT con id ${req.params.id}`);
+    res.status(202).send({
+        "id": 100,
+        "year": 2025,
+        "company": "ACME",
+        "role": "Sviluppatore Junior",
+        "description": "Lorem ipsum dolor sit amet, in Lorem duis veniam laborum ipsum nulla proident",
+        "link": "https://google.com"
+    });
 });
 
 // rispondo con "ok PATCH con id..." alle chiamate con metodo "PATCH" che ricevo su "/timeline/:id"
 server.patch('/timeline/:id', (req, res) => {
-    res.send(`ok PATCH con id ${req.params.id}`);
+    res.status(202).send({
+        "id": 100,
+        "year": 2025,
+        "company": "ACME",
+        "role": "Sviluppatore Junior",
+        "description": "Lorem ipsum dolor sit amet, in Lorem duis veniam laborum ipsum nulla proident",
+        "link": "https://google.com"
+    });
 });
 
 // rispondo con "ok DELETE con id..." alle chiamate con metodo "DELETE" che ricevo su "/timeline/:id"
 server.delete('/timeline/:id', (req, res) => {
-    res.send(`ok DELETE con id ${req.params.id}`);
+    res.status(204).send();
 });
 
 // configurazione terminata
