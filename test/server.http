@@ -2,7 +2,7 @@ GET http://localhost:3000/timeline
 
 ###
 
-GET http://localhost:3000/timeline/2
+GET http://localhost:3000/timeline/3
 
 ###
 
@@ -31,7 +31,7 @@ PATCH http://localhost:3000/timeline/2
 
 ###
 
-DELETE http://localhost:3000/timeline/2
+DELETE http://localhost:3000/timeline/8
 
 
 
