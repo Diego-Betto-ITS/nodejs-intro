@@ -18,6 +18,10 @@ Poi, segui questi semplici passi:
 
     Questo installerà tutte le dipendenze necessarie e specificate dentro `package.json`. 📦
 
+## Configurazione
+
+Cambia le variabili ambientali presenti dentro il file `.env`
+
 ## 📜 Documentazione Scripts `package.json`
 
 Questo file contiene diversi script utili per avviare e gestire il progetto. Qui sotto trovi la descrizione di ciascuno script, come avviarlo e cosa fa.
