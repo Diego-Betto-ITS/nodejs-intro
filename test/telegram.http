@@ -1,0 +1,9 @@
+POST http://localhost:3000/contact
+Content-Type: application/json
+
+{
+    "name": "nome di contatto",
+    "email": "test@acme.com",
+    "tel": "00011223344",
+    "text": "cillum elit consectetur laborum quicillum elit consectetur laborum qui"
+}

@@ -1,9 +1,37 @@
+// importo il modulo 'dotenv'
+// servirà per caricare le variabili definite dentro i file .env e .env.local
+// e renderle disponibili tramite process.env
+const dotenv = require('dotenv');
+
+// dico a dotenv di caricare le variabili del file .env dentro process.env
+dotenv.config();
+// dico a dotenv di caricare, se c'è il file, le variabili dentro .env.local
+// e se ci sono variabili sovrascrivi quelle di .env
+dotenv.config({path: '.env.local', override: true});
+
 // carico il modulo express
 const express = require('express');
 
 // carico il modulo per sqlite
 const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database('data/timeline.db');
+
+const { Telegraf } = require('telegraf')
+const { message } = require('telegraf/filters')
+
+// console.log('process.env', process.env)
+
+const bot = new Telegraf(process.env.BOT_TOKEN)
+
+bot.start((ctx) => ctx.reply('Welcome'));
+
+bot.help((ctx) => ctx.reply('Send me a sticker'))
+bot.on(message('sticker'), (ctx) => ctx.reply('👍'))
+bot.hears('hi', (ctx) => {
+  console.log(ctx.update.message.chat)
+  ctx.reply('Hey there')
+})
+bot.launch()
 
 // creo una costante "port" dove imposto la porta che userò con "server.lister" per avviare il server
 const port = 3000;
@@ -213,6 +241,18 @@ server.delete('/timeline/:id', (req, res) => {
         );
     });
 });
+
+// nuovo endpoint per il contatto
+// deve gestire correttamente il metodo
+// mostra in console il contenuto, il corpo del messaggio
+// risponde con solo "ok"
+
+server.post("/contact", (req, res) => {
+  console.log(req.body)
+  bot.telegram.sendMessage(process.env.BOT_CHAT_ID, `Contatto\nNome: ${req.body.name}\nEmail: ${req.body.email}\nTel: ${req.body.tel}\nMessaggio\n\n${req.body.text}`)
+
+  res.send()
+})
 
 // configurazione terminata
 
