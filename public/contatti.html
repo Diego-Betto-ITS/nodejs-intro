@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contatti</title>
+</head>
+<body>
+    <h1>Contatti</h1>
+
+    <form>
+        <label>
+            <span>Nome:</span><input name="name" id="name" />
+        </label>
+        <label>
+            <span>Email:</span><input name="email" id="email" />
+        </label>
+        <label>
+            <span>Tel:</span><input name="tel" id="tel" />
+        </label>
+        <label>Messaggio</label>
+        <textarea name="text" id="text"></textarea>
+    </form>
+
+    <div>
+        <button id="send">Invia</button>
+    </div>
+    
+    <style>
+        label {
+            display: block;
+            width: 100%;
+            
+            span {
+                display: inline-block;
+                width: 80px;
+            }
+        }
+        textarea {
+            width: 100%;
+        }
+
+        form {
+            width: 300px;
+            padding: 20px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+            box-shadow: 0 10px 10px rgba(200, 200, 200, 0.5); 
+        }
+    </style>
+
+    <script>
+        const formName  = document.getElementById('name');
+        const formEmail = document.getElementById('email');
+        const formTel   = document.getElementById('tel');
+        const formText  = document.getElementById('text');
+
+        const formButton = document.getElementById('send');
+
+        formButton.addEventListener(
+                'click',
+                (event) => {
+                    event.stopPropagation();
+                    console.log(
+                        formName.value, 
+                        formEmail.value, 
+                        formTel.value,
+                        formText.value,
+                    );
+
+                    fetch(
+                        'http://localhost:3000/contact',
+                        {
+                            body: JSON.stringify({
+                                name: formName.value,
+                                email: formEmail.value,
+                                tel: formTel.value,
+                                text: formText.value,
+                            }),
+                            headers: {
+                                'Content-Type': 'application/json'
+                            },
+                            method: 'POST'
+                        }
+                    );
+
+                    return false;
+                }
+        );
+    </script>
+</body>
+</html>

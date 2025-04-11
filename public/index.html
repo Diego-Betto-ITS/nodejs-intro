@@ -3,15 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Timeline</title>
 </head>
 <body>
     <h1>Timeline</h1>
 
     <div id="timeline"></div>
 
+    <style>
+        body {
+            background-color: rgb(200,200,200);
+        }
+
+        #timeline {
+            display: grid; 
+            gap: 15px;
+            grid-template-columns: 1fr 1fr 1fr;
+            
+            div {
+                border-radius: 8px;
+                border: rgba(128, 128, 128, 0.2);
+                background-color: #fff;
+                box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+                padding: 10px;
+                will-change: transform;
+                transition: transform 0.3s;
+                
+                &:hover {
+                    transform: scale(1.1);
+                }
+            }
+            
+            h3 {
+                font-family: sans-serif;
+            }
+        }
+    </style>
+
     <script>
-        
+        const start = async () => {
+            const response = await fetch('http://localhost:3000/timeline');
+            const elementiTimeline = await response.json();
+
+            const html = elementiTimeline
+                .map((item) => `<div>
+                    <h3>${item.company} - (${item.year})</h3>
+                    <p>${item.description}</p>
+                    <a href="${item.link}" target="_blank">read more</a>
+                    </div>`).join('')
+
+            const timelineElement = document.getElementById('timeline');
+            timelineElement.innerHTML = html;
+        }
+
+        start();
     </script>
 </body>
 </html>

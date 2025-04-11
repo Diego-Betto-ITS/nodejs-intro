@@ -9,6 +9,10 @@ dotenv.config();
 // e se ci sono variabili sovrascrivi quelle di .env
 dotenv.config({path: '.env.local', override: true});
 
+const path = require('path');
+const fs = require('fs');
+const axios = require('axios');
+
 // carico il modulo express
 const express = require('express');
 
@@ -21,9 +25,60 @@ const { message } = require('telegraf/filters')
 
 // console.log('process.env', process.env)
 
+const uploadDir = path.join(__dirname, '../uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.makedirSync(uploadDir);
+}
+
 const bot = new Telegraf(process.env.BOT_TOKEN)
 
 bot.start((ctx) => ctx.reply('Welcome'));
+
+bot.on('message', async (ctx, next) => {
+    const photoArray = ctx.message.photo;
+
+    if (!photoArray) {
+        next();
+    }
+
+    const largestPhoto = photoArray[photoArray.length -1];
+
+    const file = await ctx.telegram.getFile(largestPhoto.file_id);
+    const fileUrl = `https://api.telegram.org/file/bot${bot.token}/${file.file_path}`;
+
+    const fileName = `${Date.now()}_${largestPhoto.file_id}.jpg`;
+    const filePath = path.join(uploadDir, fileName);
+
+    // Scarica la foto
+    const response = await axios.get(fileUrl, { responseType: 'stream' });
+    const writer = fs.createWriteStream(filePath);
+    response.data.pipe(writer);
+
+    await new Promise((resolve, reject) => {
+        writer.on('finish', resolve);
+        writer.on('error', reject);
+    });
+/*
+    // Dati utente
+    const userId = ctx.from.id;
+    const username = ctx.from.username || 'N/A';
+
+    // Salva su DB
+    db.run(
+        `INSERT INTO photos (user_id, username, file_path) VALUES (?, ?, ?)`,
+        [userId, username, fileName],
+        function (err) {
+        if (err) return console.error('Errore DB:', err);
+        console.log(`Inserito nel DB: ${filePath}`);
+        }
+    );
+
+    for (let socket of active_sockets) {
+        socket.send("photo_update");
+    }*/
+
+    ctx.reply('Foto ricevuta e salvata con successo!');
+})
 
 bot.help((ctx) => ctx.reply('Send me a sticker'))
 bot.on(message('sticker'), (ctx) => ctx.reply('👍'))
@@ -42,6 +97,8 @@ const server = express();
 // indico che voglio decodificare i contenuti che ricevo come JSON
 server.use(express.json());
 
+server.use('/', express.static('public'));
+
 // creo la tabella nel database se già non esiste
 db.serialize(() => {
     db.run('CREATE TABLE IF NOT EXISTS timeline (year INTEGER, company TEXT, role TEXT, description TEXT, link TEXT)');
@@ -51,6 +108,7 @@ db.serialize(() => {
 
 // rispondo con il contenuto di "../data/timeline.json" a chi richiede la rotta "/timeline"
 server.get('/timeline', (req, res) => {
+    console.log('arrivata richiesta di accesso alla timeline')
     // usare db per pescare tutte le righe presenti nella tabella timeline
     // e inviarle al client
     db.all(
